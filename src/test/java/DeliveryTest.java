@@ -92,4 +92,15 @@ public class DeliveryTest {
         $(byText("Забронировать")).click();
         $("[data-test-id='agreement'].input_invalid").shouldHave(Condition.exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
     }
+
+    @Test
+    void shouldSubmitIfNameIsEmpty(){
+        $("[placeholder='Город']").setValue("Архангельск");
+        $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи'").setValue(date);
+        $("[name='phone']").setValue("+79991112233");
+        $("[data-test-id='agreement']").click();
+        $(byText("Забронировать")).click();
+        $("[data-test-id='name'] span.input__sub").shouldHave(Condition.exactText("Поле обязательно для заполнения"));
+    }
 }

@@ -1,12 +1,14 @@
 import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
@@ -15,9 +17,13 @@ public class DeliveryTest {
     String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     String currentdate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
+    @BeforeEach
+    void setup() {
+        open("http://localhost:9999");
+    }
+
     @Test
     void shouldSubmitIfAllCorrect(){
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Архангельск");
         $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
         $("[placeholder='Дата встречи'").setValue(date);
@@ -25,12 +31,11 @@ public class DeliveryTest {
         $("[name='phone']").setValue("+79991112233");
         $("[data-test-id='agreement']").click();
         $(byText("Забронировать")).click();
-        $(withText ("Встреча успешно забронирована")).waitUntil(Condition.visible, 15000);
+        $("[data-test-id='notification']").waitUntil(visible, 15000).shouldHave(text("Встреча успешно забронирована на "+date));
         }
 
     @Test
     void shouldSubmitIfCityInCorrect(){
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Арх");
         $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
         $("[placeholder='Дата встречи'").setValue(date);
@@ -43,7 +48,6 @@ public class DeliveryTest {
 
     @Test
     void shouldSubmitIfDateInCorrect(){
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Архангельск");
         $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
         $("[placeholder='Дата встречи'").setValue(currentdate);
@@ -56,7 +60,6 @@ public class DeliveryTest {
 
     @Test
     void shouldSubmitIfNameInCorrect(){
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Архангельск");
         $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
         $("[placeholder='Дата встречи'").setValue(date);
@@ -69,7 +72,6 @@ public class DeliveryTest {
 
     @Test
     void shouldSubmitIfPhoneInCorrect(){
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Архангельск");
         $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
         $("[placeholder='Дата встречи'").setValue(date);
@@ -82,7 +84,6 @@ public class DeliveryTest {
 
     @Test
     void shouldSubmitIfCheckboxIsEmpty(){
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Архангельск");
         $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL+"a"+Keys.BACK_SPACE);
         $("[placeholder='Дата встречи'").setValue(date);
